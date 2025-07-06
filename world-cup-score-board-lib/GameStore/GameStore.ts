@@ -7,11 +7,21 @@ export class GameStore {
     public creationDate: Date;
 
     public constructor(homeTeam: string, awayTeam: string) {
+        this.assertTeamNamesAreDifferent(homeTeam, awayTeam);
         this.homeTeam = new TeamStore(homeTeam);
         this.awayTeam = new TeamStore(awayTeam);
         this.id = `game-${homeTeam}-${awayTeam}`;
         this.creationDate = new Date();
     }
 
-    public updateScore() {}
+    public updateScore(homeTeamScore: number, awayTeamScore: number) {
+        this.homeTeam.setScore(homeTeamScore);
+        this.awayTeam.setScore(awayTeamScore);
+    }
+
+    assertTeamNamesAreDifferent(homeTeam: string, awayTeam: string): void {
+        if (homeTeam === awayTeam) {
+            throw new Error(`Teams should be different! HomeTeam: [${homeTeam}], AwayTeam: [${awayTeam}]`);
+        }
+    }
 }

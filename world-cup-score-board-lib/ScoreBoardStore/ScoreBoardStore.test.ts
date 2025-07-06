@@ -89,11 +89,98 @@ describe('finishGame', () => {
 });
 
 describe('getSummaryOfGamesByTotalScore', () => {
-    it('should sort games by total score in descending order', () => {});
+    let scoreBoard: ScoreBoardStore;
 
-    it('should sort by creation date when total scores are equal', () => {});
+    beforeEach(() => {
+        scoreBoard = new ScoreBoardStore();
+    });
 
-    it('should handle games with zero scores', () => {});
+    it('should sort games by total score in descending order', () => {
+        scoreBoard.startGame('Argentina', 'Australia');
+        scoreBoard.games[0].updateScore(3, 2);
 
-    it('should handle mixed scenarios with different scores and creation dates', () => {});
+        scoreBoard.startGame('Germany', 'France');
+        scoreBoard.games[0].updateScore(10, 2);
+
+        scoreBoard.startGame('Spain', 'Brazil');
+        scoreBoard.games[0].updateScore(7, 2);
+
+        const summary = scoreBoard.getSummaryOfGamesByTotalScore();
+
+        expect(summary[0].homeTeam.name).toBe('Germany');
+        expect(summary[0].awayTeam.name).toBe('France');
+
+        expect(summary[1].homeTeam.name).toBe('Spain');
+        expect(summary[1].awayTeam.name).toBe('Brazil');
+
+        expect(summary[2].homeTeam.name).toBe('Argentina');
+        expect(summary[2].awayTeam.name).toBe('Australia');
+
+        expect(summary).toHaveLength(3);
+    });
+
+    it('should sort by creation date when total scores are equal', () => {
+        jest.spyOn(Date, 'now').mockReturnValueOnce(3000);
+        scoreBoard.startGame('First', '1st');
+        scoreBoard.games[0].updateScore(2, 2);
+
+        jest.spyOn(Date, 'now').mockReturnValueOnce(2000);
+        scoreBoard.startGame('Second', '2nd');
+        scoreBoard.games[0].updateScore(2, 2);
+
+        jest.spyOn(Date, 'now').mockReturnValueOnce(1000);
+        scoreBoard.startGame('Third', '3rd');
+        scoreBoard.games[0].updateScore(2, 2);
+
+        const summary = scoreBoard.getSummaryOfGamesByTotalScore();
+
+        expect(summary).toHaveLength(3);
+        expect(summary[0].homeTeam.name).toBe('Third');
+        expect(summary[1].homeTeam.name).toBe('Second');
+        expect(summary[2].homeTeam.name).toBe('First');
+
+        jest.restoreAllMocks();
+    });
+
+    it('should handle games with zero scores', () => {
+        scoreBoard.startGame('Team1', 'Team2');
+        scoreBoard.games[0].updateScore(0, 0);
+
+        scoreBoard.startGame('Team3', 'Team4');
+        scoreBoard.games[0].updateScore(1, 0);
+
+        const summary = scoreBoard.getSummaryOfGamesByTotalScore();
+
+        expect(summary).toHaveLength(2);
+        expect(summary[0].homeTeam.name).toBe('Team3');
+        expect(summary[1].homeTeam.name).toBe('Team1');
+    });
+
+    it('should handle mixed scenarios with different scores and creation dates', () => {
+        jest.spyOn(Date, 'now').mockReturnValueOnce(1000);
+        scoreBoard.startGame('HighScore1', 'Team1');
+        scoreBoard.games[0].updateScore(5, 5);
+
+        jest.spyOn(Date, 'now').mockReturnValueOnce(2000);
+        scoreBoard.startGame('LowScore1', 'Team2');
+        scoreBoard.games[0].updateScore(1, 1);
+
+        jest.spyOn(Date, 'now').mockReturnValueOnce(3000);
+        scoreBoard.startGame('HighScore2', 'Team3');
+        scoreBoard.games[0].updateScore(4, 6);
+
+        jest.spyOn(Date, 'now').mockReturnValueOnce(4000);
+        scoreBoard.startGame('LowScore2', 'Team4');
+        scoreBoard.games[0].updateScore(0, 2);
+
+        const summary = scoreBoard.getSummaryOfGamesByTotalScore();
+
+        expect(summary[0].homeTeam.name).toBe('HighScore1');
+        expect(summary[1].homeTeam.name).toBe('HighScore2');
+
+        expect(summary[2].homeTeam.name).toBe('LowScore1');
+        expect(summary[3].homeTeam.name).toBe('LowScore2');
+
+        expect(summary).toHaveLength(4);
+    });
 });

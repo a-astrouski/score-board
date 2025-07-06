@@ -4,14 +4,14 @@ export class GameStore {
     public id: string;
     public homeTeam: TeamStore;
     public awayTeam: TeamStore;
-    public creationDate: Date;
+    public creationDate: number;
 
     public constructor(homeTeam: string, awayTeam: string) {
         this.assertTeamNamesAreDifferent(homeTeam, awayTeam);
         this.homeTeam = new TeamStore(homeTeam);
         this.awayTeam = new TeamStore(awayTeam);
         this.id = `game-${homeTeam}-${awayTeam}`;
-        this.creationDate = new Date();
+        this.creationDate = Date.now();
     }
 
     public updateScore(homeTeamScore: number, awayTeamScore: number) {

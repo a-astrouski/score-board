@@ -37,13 +37,53 @@ describe('startGame', () => {
 });
 
 describe('finishGame', () => {
-    it('should remove an existing game', () => {});
+    let scoreBoard: ScoreBoardStore;
 
-    it('should throw an exception when trying to finish a non-existent game', () => {});
+    beforeEach(() => {
+        scoreBoard = new ScoreBoardStore();
+    });
 
-    it('should throw an error when gameId is null or undefined', () => {});
+    it('should remove an existing game', () => {
+        scoreBoard.startGame('Brazil', 'Argentina');
+        const gameId = scoreBoard.games[0].id;
+        const initialGamesCount = scoreBoard.games.length;
 
-    it('should throw an error when gameId is whitespace', () => {});
+        scoreBoard.finishGame(gameId);
 
-    it('should finish the correct game when multiple games exist', () => {});
+        expect(scoreBoard.games.length).toBe(initialGamesCount - 1);
+        expect(scoreBoard.games.find(game => game.id === gameId)).toBeUndefined();
+    });
+
+    it('should throw an exception when trying to finish a non-existent game', () => {
+        const nonExistentGameId = 'game-NonExistent-Team';
+
+        expect(() => scoreBoard.finishGame(nonExistentGameId)).toThrow('Game does not exist!');
+    });
+
+    it('should throw an error when gameId is null or undefined', () => {
+        expect(() => scoreBoard.finishGame(null as never)).toThrow('Game ID cannot be empty');
+        expect(() => scoreBoard.finishGame(undefined as never)).toThrow('Game ID cannot be empty');
+    });
+
+    it('should throw an error when gameId is whitespace', () => {
+        expect(() => scoreBoard.finishGame('')).toThrow('Game ID cannot be empty');
+        expect(() => scoreBoard.finishGame('   ')).toThrow('Game ID cannot be empty');
+    });
+
+    it('should finish the correct game when multiple games exist', () => {
+        scoreBoard.startGame('France', 'Germany');
+        scoreBoard.startGame('England', 'Portugal');
+        scoreBoard.startGame('Mexico', 'Canada');
+
+        const gameToFinish = scoreBoard.games[1];
+        const gameToKeep1 = scoreBoard.games[0];
+        const gameToKeep2 = scoreBoard.games[2];
+
+        scoreBoard.finishGame(gameToFinish.id);
+
+        expect(scoreBoard.games.length).toBe(2);
+        expect(scoreBoard.games).toContain(gameToKeep1);
+        expect(scoreBoard.games).toContain(gameToKeep2);
+        expect(scoreBoard.games).not.toContain(gameToFinish);
+    });
 });

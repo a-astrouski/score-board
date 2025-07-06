@@ -27,7 +27,18 @@ export class ScoreBoardStore {
         this.games = this.games.filter(game => game.id !== gameId);
     }
 
-    public getSummaryOfGamesByTotalScore() {}
+    public getSummaryOfGamesByTotalScore() {
+        return [...this.games].sort((a, b) => {
+            const totalA = a.homeTeam.score + a.awayTeam.score;
+            const totalB = b.homeTeam.score + b.awayTeam.score;
+
+            if (totalA !== totalB) {
+                return totalB - totalA;
+            }
+
+            return a.creationDate - b.creationDate;
+        });
+    }
 
     private doesTeamAlreadyPlay(team: string): boolean {
         return (

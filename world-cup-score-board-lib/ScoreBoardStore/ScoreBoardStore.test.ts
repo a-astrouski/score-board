@@ -87,3 +87,13 @@ describe('finishGame', () => {
         expect(scoreBoard.games).not.toContain(gameToFinish);
     });
 });
+
+describe('getSummaryOfGamesByTotalScore', () => {
+    it('should sort games by total score in descending order', () => {});
+
+    it('should sort by creation date when total scores are equal', () => {});
+
+    it('should handle games with zero scores', () => {});
+
+    it('should handle mixed scenarios with different scores and creation dates', () => {});
+});

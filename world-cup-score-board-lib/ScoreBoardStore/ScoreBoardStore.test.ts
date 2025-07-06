@@ -35,3 +35,15 @@ describe('startGame', () => {
         );
     });
 });
+
+describe('finishGame', () => {
+    it('should remove an existing game', () => {});
+
+    it('should throw an exception when trying to finish a non-existent game', () => {});
+
+    it('should throw an error when gameId is null or undefined', () => {});
+
+    it('should throw an error when gameId is whitespace', () => {});
+
+    it('should finish the correct game when multiple games exist', () => {});
+});

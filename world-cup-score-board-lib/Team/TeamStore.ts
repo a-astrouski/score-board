@@ -1,3 +1,5 @@
+import { action, makeAutoObservable } from 'mobx';
+
 export class TeamStore {
     public id: string;
     public name: string;
@@ -8,10 +10,10 @@ export class TeamStore {
         this.name = name;
         this.score = 0;
         this.id = `team-${name}}`;
-    }
 
-    public getScore(): number {
-        return this.score;
+        makeAutoObservable(this, {
+            setScore: action.bound,
+        });
     }
 
     public setScore(score: number): void {

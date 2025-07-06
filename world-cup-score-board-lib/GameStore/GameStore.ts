@@ -1,4 +1,5 @@
 import { TeamStore } from '../Team/TeamStore';
+import { action, makeAutoObservable } from 'mobx';
 
 export class GameStore {
     public id: string;
@@ -12,6 +13,10 @@ export class GameStore {
         this.awayTeam = new TeamStore(awayTeam);
         this.id = `game-${homeTeam}-${awayTeam}`;
         this.creationDate = Date.now();
+
+        makeAutoObservable(this, {
+            updateScore: action.bound,
+        });
     }
 
     public updateScore(homeTeamScore: number, awayTeamScore: number) {
@@ -19,7 +24,7 @@ export class GameStore {
         this.awayTeam.setScore(awayTeamScore);
     }
 
-    assertTeamNamesAreDifferent(homeTeam: string, awayTeam: string): void {
+    private assertTeamNamesAreDifferent(homeTeam: string, awayTeam: string): void {
         if (homeTeam === awayTeam) {
             throw new Error(`Teams should be different! HomeTeam: [${homeTeam}], AwayTeam: [${awayTeam}]`);
         }

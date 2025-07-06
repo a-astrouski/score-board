@@ -1,9 +1,17 @@
 import { GameStore } from '@/world-cup-score-board-lib/GameStore/GameStore';
+import { action, makeAutoObservable, observable } from 'mobx';
 
 export class ScoreBoardStore {
     public games: GameStore[] = [];
 
-    public constructor() {}
+    public constructor() {
+        makeAutoObservable(this, {
+            games: observable,
+            startGame: action.bound,
+            finishGame: action.bound,
+            getSummaryOfGamesByTotalScore: action.bound,
+        });
+    }
 
     public startGame(homeTeam: string, awayTeam: string) {
         if (this.doesTeamAlreadyPlay(homeTeam)) {
@@ -12,7 +20,7 @@ export class ScoreBoardStore {
             throw new Error(`Team [${awayTeam}] already plays in another match!`);
         }
 
-        this.games.unshift(new GameStore(homeTeam, awayTeam));
+        this.games = [new GameStore(homeTeam, awayTeam), ...this.games];
     }
 
     public finishGame(gameId: string) {

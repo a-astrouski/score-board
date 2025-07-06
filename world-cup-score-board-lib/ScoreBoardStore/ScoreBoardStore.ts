@@ -15,7 +15,17 @@ export class ScoreBoardStore {
         this.games.unshift(new GameStore(homeTeam, awayTeam));
     }
 
-    public finishGame() {}
+    public finishGame(gameId: string) {
+        if (!gameId || gameId.trim().length === 0) {
+            throw new Error('Game ID cannot be empty');
+        }
+
+        if (this.games.findIndex(game => game.id === gameId) === -1) {
+            throw new Error('Game does not exist!');
+        }
+
+        this.games = this.games.filter(game => game.id !== gameId);
+    }
 
     public getSummaryOfGamesByTotalScore() {}
 

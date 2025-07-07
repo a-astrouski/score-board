@@ -44,7 +44,7 @@ export class ScoreBoardStore {
                 return totalB - totalA;
             }
 
-            return a.creationDate - b.creationDate;
+            return b.creationDate - a.creationDate;
         });
     }
 

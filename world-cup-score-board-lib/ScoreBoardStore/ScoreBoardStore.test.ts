@@ -120,23 +120,23 @@ describe('getSummaryOfGamesByTotalScore', () => {
     });
 
     it('should sort by creation date when total scores are equal', () => {
-        jest.spyOn(Date, 'now').mockReturnValueOnce(3000);
+        jest.spyOn(Date, 'now').mockReturnValueOnce(1000);
         scoreBoard.startGame('First', '1st');
         scoreBoard.games[0].updateScore(2, 2);
 
-        jest.spyOn(Date, 'now').mockReturnValueOnce(2000);
+        jest.spyOn(Date, 'now').mockReturnValueOnce(5000);
         scoreBoard.startGame('Second', '2nd');
         scoreBoard.games[0].updateScore(2, 2);
 
-        jest.spyOn(Date, 'now').mockReturnValueOnce(1000);
+        jest.spyOn(Date, 'now').mockReturnValueOnce(3000);
         scoreBoard.startGame('Third', '3rd');
         scoreBoard.games[0].updateScore(2, 2);
 
         const summary = scoreBoard.getSummaryOfGamesByTotalScore();
 
         expect(summary).toHaveLength(3);
-        expect(summary[0].homeTeam.name).toBe('Third');
-        expect(summary[1].homeTeam.name).toBe('Second');
+        expect(summary[0].homeTeam.name).toBe('Second');
+        expect(summary[1].homeTeam.name).toBe('Third');
         expect(summary[2].homeTeam.name).toBe('First');
 
         jest.restoreAllMocks();
@@ -175,11 +175,11 @@ describe('getSummaryOfGamesByTotalScore', () => {
 
         const summary = scoreBoard.getSummaryOfGamesByTotalScore();
 
-        expect(summary[0].homeTeam.name).toBe('HighScore1');
-        expect(summary[1].homeTeam.name).toBe('HighScore2');
+        expect(summary[0].homeTeam.name).toBe('HighScore2');
+        expect(summary[1].homeTeam.name).toBe('HighScore1');
 
-        expect(summary[2].homeTeam.name).toBe('LowScore1');
-        expect(summary[3].homeTeam.name).toBe('LowScore2');
+        expect(summary[2].homeTeam.name).toBe('LowScore2');
+        expect(summary[3].homeTeam.name).toBe('LowScore1');
 
         expect(summary).toHaveLength(4);
     });
